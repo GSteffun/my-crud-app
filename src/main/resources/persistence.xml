@@ -1,0 +1,21 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="org.steffun">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:/DefaultDS</jta-data-source>
+        <properties>
+            <property name="hibernate.connection.driver_class"
+                      value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.connection.password">XXXXXX</property>
+            <property name="hibernate.connection.url"
+                      value="jdbc:mysql://localhost:3306/base_for_work?verifyServerCertificate=false&useSSL=false&requireSSL=false&useLegacyDatetimeCode=false&amp&serverTimezone=UTC"
+
+            </property>
+            <property name="hibernate.connection.username">XXXXX</property>
+            <property name="hibernate.default_schema">XXXXXX</property>
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        </properties>
+    </persistence-unit>
+</persistence>
