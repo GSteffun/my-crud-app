@@ -4,67 +4,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.steffun.model.User;
 import org.steffun.service.UserService;
 
 @Controller
+@RequestMapping(value = "/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping()
     public String indexPage(ModelMap model) {
         model.addAttribute("listUsers", userService.listUsers());
-        return "index";
+        return "users/index";
     }
 
-    @GetMapping(value = "/saveUser")
-    public String saveUser(@RequestParam(value = "name") String name,
-                           @RequestParam(value = "lastName") String lastName,
-                           @RequestParam(value = "age") int age,
-                           Model model) {
-        userService.saveUser(name, lastName, age);
-        model.addAttribute("user", "User create successful, name: " + name + ", lastname: " + lastName + ", age: " + age);
-        return "usersaved";
+    @GetMapping(value = "/new")
+    public String newUser(@ModelAttribute("user") User user) {
+        return "users/new";
     }
 
-    @GetMapping(value = "/removeUser")
-    public String removeUserById(@RequestParam(value = "id") long id, Model model) {
+    @PostMapping()
+    public String create(@ModelAttribute("user") User user,
+                         @RequestParam(value = "name") String name,
+                         @RequestParam(value = "lastName") String lastName,
+                         @RequestParam(value = "age") int age) {
+        user.setName(name);
+        user.setLastName(lastName);
+        user.setAge(age);
+        userService.saveUser(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping(value = "/{id}/edit")
+    public String edit(Model model, @PathVariable(value = "id") long id) {
+        model.addAttribute("user", userService.show(id));
+        return "users/edit";
+    }
+
+    @PatchMapping(value = "/{id}")
+    public String update(@ModelAttribute(value = "user") User user, @PathVariable(value = "id") long id) {
+        userService.update(user, id);
+        return "redirect:/users";
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public String removeUserById(@PathVariable(value = "id") long id) {
         userService.removeUserById(id);
-        model.addAttribute("user", "User remove successful, id: " + id);
-        return "userremoved";
+        return "redirect:/users";
     }
 
-    @GetMapping(value = "setUserName")
-    public String setUserName(@RequestParam(value = "id") long id,
-                              @RequestParam(value = "name") String name,
-                              Model model) {
-        userService.setUserName(id, name);
-        model.addAttribute("userName", "User name changed successful, new name: " + name);
-        return "usersetname";
-    }
-
-    @GetMapping(value = "setUserLastName")
-    public String setUserLastName(@RequestParam(value = "id") long id,
-                                  @RequestParam(value = "lastName") String lastName,
-                                  Model model) {
-        userService.setUserLastName(id, lastName);
-        model.addAttribute("userLastName", "User last name changed successful, new last name: " + lastName);
-        return "usersetlastname";
-    }
-
-    @GetMapping(value = "setUserAge")
-    public String setUserAge(@RequestParam(value = "id") long id,
-                             @RequestParam(value = "age") int age,
-                             Model model) {
-        userService.setUserAge(id, age);
-        model.addAttribute("userAge", "User age changed successful, new last name: " + age);
-        return "usersetage";
-    }
 }

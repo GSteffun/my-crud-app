@@ -1,105 +1,62 @@
 package org.steffun.dao;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.steffun.model.User;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private final EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private final EntityManager em;
 
-    @Autowired
-    public UserDaoImpl(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public UserDaoImpl(EntityManagerFactory emf) {
+        this.em = emf.createEntityManager();
     }
 
     @Transactional
     @Override
-    public void saveUser(String name, String lastName, int age) {
-        try (Session session = entityManagerFactory.createEntityManager()) {
-            Transaction transaction = session.beginTransaction();
-            User user = new User(name, lastName, age);
-            session.save(user);
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+    public void saveUser(User user) {
+        em.persist(user);
+        em.flush();
+    }
+
+    @Transactional
+    @Override
+    public User show(long id) {
+        User user = (User) em.createQuery("FROM User WHERE id = :id")
+                .setParameter("id", id)
+                .getSingleResult();
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public void update(User userUpdated, long id) {
+        User userToBeUpdated = show(id);
+        userToBeUpdated.setName(userUpdated.getName());
+        userToBeUpdated.setLastName(userUpdated.getLastName());
+        userToBeUpdated.setAge(userUpdated.getAge());
+        em.persist(userToBeUpdated);
+        em.flush();
     }
 
     @Transactional
     @Override
     public void removeUserById(long id) {
-        try (Session session = entityManagerFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.createQuery("DELETE FROM User WHERE id = :id")
-                    .setParameter("id", id)
-                    .executeUpdate();
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Transactional
-    @Override
-    public void setUserName(long id, String name) {
-        try (Session session = entityManagerFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.createQuery("UPDATE User SET name = :name WHERE id = :id")
-                    .setParameter("id", id)
-                    .setParameter("name", name)
-                    .executeUpdate();
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Transactional
-    @Override
-    public void setUserLastName(long id, String lastName) {
-        try (Session session = entityManagerFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.createQuery("UPDATE User SET lastName = :lastName WHERE id = :id")
-                    .setParameter("id", id)
-                    .setParameter("lastName", lastName)
-                    .executeUpdate();
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Transactional
-    @Override
-    public void setUserAge(long id, int age) {
-        try (Session session = entityManagerFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.createQuery("UPDATE User SET age = :age WHERE id = :id")
-                    .setParameter("id", id)
-                    .setParameter("age", age)
-                    .executeUpdate();
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+        em.remove(show(id));
+        em.flush();
     }
 
     @Transactional
     @Override
     public List<User> listUsers() {
-        TypedQuery<User> query = entityManagerFactory.openSession().createQuery("from User");
-        return query.getResultList();
+        return em.createQuery("FROM User").getResultList();
     }
 
 }

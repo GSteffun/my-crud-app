@@ -18,28 +18,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(String name, String lastName, int age) {
-        userDao.saveUser(name, lastName, age);
+    public void saveUser(User user) {
+        userDao.saveUser(user);
+    }
+
+    @Override
+    public User show(long id) {
+        return userDao.show(id);
+    }
+
+    @Override
+    public void update(User user, long id) {
+        userDao.update(user, id);
     }
 
     @Override
     public void removeUserById(long id) {
         userDao.removeUserById(id);
-    }
-
-    @Override
-    public void setUserName(long id, String name) {
-        userDao.setUserName(id, name);
-    }
-
-    @Override
-    public void setUserLastName(long id, String lastName) {
-        userDao.setUserLastName(id, lastName);
-    }
-
-    @Override
-    public void setUserAge(long id, int age) {
-        userDao.setUserAge(id, age);
     }
 
     @Override
