@@ -2,6 +2,7 @@ package org.steffun.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.steffun.dao.UserDao;
 import org.steffun.model.User;
 
@@ -17,28 +18,31 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
+    @Transactional
     @Override
     public void saveUser(User user) {
         userDao.saveUser(user);
     }
 
     @Override
-    public User show(long id) {
-        return userDao.show(id);
+    public User getUserById(long id) {
+        return userDao.getUserById(id);
     }
 
+    @Transactional
     @Override
-    public void update(User user, long id) {
-        userDao.update(user, id);
+    public void update(User user) {
+        userDao.update(user);
     }
 
+    @Transactional
     @Override
     public void removeUserById(long id) {
         userDao.removeUserById(id);
     }
 
     @Override
-    public List<User> listUsers() {
-        return userDao.listUsers();
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 }
