@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and()
-                .csrf().disable(); //отключение кроссдоменной секьюроности
+                .csrf().disable(); //отключение кроссдоменной секьюроности 12
     }
 
     @Bean
