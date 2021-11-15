@@ -26,6 +26,7 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
     // Добавление возможности фильтрации скрытых полей с методомаи http
     @Override
     public void onStartup(ServletContext aServletContext) throws ServletException {
