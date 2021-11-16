@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.steffun.dao.RoleDao;
 import org.steffun.model.Role;
-import org.steffun.model.User;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +44,8 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public List<User> getListUser() {
-        return roleDao.getListUser();
+    public List<Role> getListRole() {
+        return roleDao.getListRole();
     }
 
     @Override

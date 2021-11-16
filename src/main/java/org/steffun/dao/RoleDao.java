@@ -1,7 +1,6 @@
 package org.steffun.dao;
 
 import org.steffun.model.Role;
-import org.steffun.model.User;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface RoleDao {
 
     void removeById(int id);
 
-    List<User> getListUser();
+    List<Role> getListRole();
 
     Role getByName(String roleName);
 

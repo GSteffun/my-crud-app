@@ -1,4 +1,4 @@
-package org.steffun.config;
+package org.steffun.config.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

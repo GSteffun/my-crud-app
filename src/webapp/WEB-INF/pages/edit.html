@@ -10,16 +10,21 @@
     <input type="text" th:field="*{username}" id="username"/>
     <br/>
     <label for="password">Enter password: </label>
-    <input type="text" id="password"/>
+    <input type="password" th:field="*{password}" id="password"/>
     <br/>
-    <input type="checkbox" name="roles" value="ROLE_USER"/> USER
-    <input type="checkbox" name="roles" value="ROLE_ADMIN"/> ADMIN
-    <br/>
+    <p th:each="role : ${listRoles}">
+        <label for="listRoles">Roles: </label>
+        <input th:text="${role}" type="checkbox" name="listRoles" id="listRoles" th:value="${role}"/>
+    </p>
     <input type="submit" value="Update">
 </form>
 <br/>
 <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
     <input type="submit" value="Remove">
 </form>
+<br/>
+<button>
+    <a th:href="@{/logout}">Logout</a>
+</button>
 </body>
 </html>
