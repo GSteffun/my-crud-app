@@ -3,7 +3,6 @@ package org.steffun.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.steffun.model.Role;
-import org.steffun.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,7 +43,7 @@ public class RoleDaoImpl implements RoleDao{
     }
 
     @Override
-    public List<User> getListUser() {
+    public List<Role> getListRole() {
         return em.createQuery("FROM Role").getResultList();
     }
 

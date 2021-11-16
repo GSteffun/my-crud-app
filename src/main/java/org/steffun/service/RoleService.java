@@ -1,7 +1,6 @@
 package org.steffun.service;
 
 import org.steffun.model.Role;
-import org.steffun.model.User;
 
 import java.util.List;
 import java.util.Set;
@@ -16,7 +15,7 @@ public interface RoleService {
 
     void removeById(int id);
 
-    List<User> getListUser();
+    List<Role> getListRole();
 
     Role getByName(String roleName);
 

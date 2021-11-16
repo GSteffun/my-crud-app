@@ -1,12 +1,14 @@
 package org.steffun.dao;
 
 import org.springframework.stereotype.Repository;
+import org.steffun.model.Role;
 import org.steffun.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -52,4 +54,8 @@ public class UserDaoImpl implements UserDao {
                 .getSingleResult();
     }
 
+    @Override
+    public Set<Role> getUserRoles(User user) {
+        return em.find(User.class, user.getId()).getRoles();
+    }
 }
