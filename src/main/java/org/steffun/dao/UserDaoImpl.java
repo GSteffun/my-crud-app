@@ -1,5 +1,6 @@
 package org.steffun.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.steffun.model.Role;
 import org.steffun.model.User;
@@ -16,8 +17,9 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private final EntityManager em;
 
-    public UserDaoImpl(EntityManagerFactory emf) {
-        this.em = emf.createEntityManager();
+    @Autowired
+    public UserDaoImpl(EntityManagerFactory em) {
+        this.em = em.createEntityManager();
     }
 
     @Override
@@ -58,4 +60,5 @@ public class UserDaoImpl implements UserDao {
     public Set<Role> getUserRoles(User user) {
         return em.find(User.class, user.getId()).getRoles();
     }
+
 }

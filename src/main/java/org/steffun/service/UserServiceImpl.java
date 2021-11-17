@@ -1,6 +1,8 @@
 package org.steffun.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.steffun.dao.UserDao;
@@ -14,15 +16,19 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     @Override
-    public void saveUser(User user) {
+    public void saveUser(User user, Set<Role> roles) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(roles);
         userDao.saveUser(user);
     }
 
@@ -33,7 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(User user) {
+    public void update(User user, Set<Role> roles) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(roles);
         userDao.update(user);
     }
 
@@ -57,4 +65,5 @@ public class UserServiceImpl implements UserService {
     public Set<Role> getUserRoles(User user) {
         return userDao.getUserRoles(user);
     }
+
 }

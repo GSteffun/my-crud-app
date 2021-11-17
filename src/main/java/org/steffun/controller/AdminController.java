@@ -1,8 +1,6 @@
 package org.steffun.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -12,7 +10,8 @@ import org.steffun.model.User;
 import org.steffun.service.RoleService;
 import org.steffun.service.UserService;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -21,13 +20,11 @@ public class AdminController {
 
     private UserService userService;
     private RoleService roleService;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -45,19 +42,17 @@ public class AdminController {
 
     @PostMapping(value = "/create")
     public String create(@ModelAttribute("user") User user,
-                         @RequestParam(value = "username") String username,
-                         @RequestParam(value = "password") String password,
                          @RequestParam(value = "listRoles") String[] roles) {
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setRoles(roleService.getRoleSet(roles));
-        userService.saveUser(user);
+        userService.saveUser(user, roleService.getRoleSet(roles));
         return "redirect:/admin";
     }
 
     @GetMapping(value = "/{id}/edit")
     public String edit(Model model, @PathVariable(value = "id") long id, ModelMap modelMap) {
-        modelMap.addAttribute("listRoles", roleService.getListRole());
+        Map<String, Boolean> userRolesMap = new HashMap<>();
+        for(Role role : roleService.getListRole()) userRolesMap.put(role.getRole(), false);
+        for (Role role : userService.getUserRoles(userService.getUserById(id))) userRolesMap.put(role.getRole(), true);
+        modelMap.addAttribute("listRoles", userRolesMap);
         model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
@@ -65,11 +60,8 @@ public class AdminController {
     @PatchMapping(value = "/{id}")
     public String update(@ModelAttribute User user,
                          @PathVariable(value = "id") long id,
-                         @RequestParam(value = "password") String password,
                          @RequestParam(value = "listRoles") String[] roles) {
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRoles(roleService.getRoleSet(roles));
-        userService.update(user);
+        userService.update(user, roleService.getRoleSet(roles));
         return "redirect:/admin";
     }
 
