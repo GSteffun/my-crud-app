@@ -12,8 +12,8 @@
     <label for="password">Password: </label>
     <input type="password" th:field="*{password}" id="password"/>
     <br/>
+    <label for="listRoles">Roles: </label>
     <p th:each="role : ${listRoles}">
-        <label for="listRoles">Roles: </label>
         <input th:text="${role}" type="checkbox" name="listRoles" id="listRoles" th:value="${role}"/>
     </p>
     <input type="submit" value="Create!">

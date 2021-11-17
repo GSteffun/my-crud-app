@@ -13,9 +13,13 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.steffun.model.Role;
+import org.steffun.model.User;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableTransactionManagement

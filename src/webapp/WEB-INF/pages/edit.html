@@ -12,9 +12,9 @@
     <label for="password">Enter password: </label>
     <input type="password" th:field="*{password}" id="password"/>
     <br/>
+    <label for="listRoles">Roles: </label>
     <p th:each="role : ${listRoles}">
-        <label for="listRoles">Roles: </label>
-        <input th:text="${role}" type="checkbox" name="listRoles" id="listRoles" th:value="${role}"/>
+        <input th:text="${role.getKey()}" type="checkbox" th:`checked="${role.getValue()}" name="listRoles" id="listRoles" th:value="${role.getKey()}"/>
     </p>
     <input type="submit" value="Update">
 </form>
